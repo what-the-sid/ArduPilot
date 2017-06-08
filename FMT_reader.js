@@ -3,9 +3,6 @@ var offset = 0;
 var file=require('fs').readFileSync('2.bin');
 var buffer=file;
 var temp=0
-if (!Buffer.isBuffer(buffer)) {
-throw new Error("argument buffer is not a Buffer object");
-}
 attr.FMT = [];
 while(true) {
 var fmt_dict = {};
