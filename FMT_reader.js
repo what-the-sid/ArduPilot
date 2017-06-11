@@ -31,16 +31,28 @@ function FORMAT_TO_STRUCT(obj)
                 offset+=1;
                 break;
             case 'h':
-                dict[i]=buffer.readInt16BE(offset);
+                dict[i]=buffer.readInt16LE(offset);
                 offset+=2;
                 break;
             case 'H':
-                dict[i]=buffer.readUInt16BE(offset);
+                dict[i]=buffer.readUInt16LE(offset);
                 offset+=2;
+                break;
+            case 'i':
+                dict[i]=buffer.readInt32LE(offset);
+                offset+=4;
+                break;
+            case 'I':
+                dict[i]=buffer.readUInt32LE(offset);
+                offset+=4;
                 break;
             case 'f':
                 dict[i]=buffer.readFloatLE(offset);
                 offset+=4;
+                break;
+            case 'd':
+                dict[i]=buffer.readDoubleLE(offset);
+                offset+=8;
                 break;
             case 'Q':
                 var low = buffer.readUInt32LE(offset);
@@ -70,18 +82,38 @@ function FORMAT_TO_STRUCT(obj)
                 dict[i]=buffer.toString('ascii', offset, offset + 64).replace(/\x00+$/g, '');
                 offset+=64;
                 break;
-                // i   : int32_t
-                // I   : uint32_t
-                // f   : float
-                // d   : double
-                // c   : int16_t * 100
-                // C   : uint16_t * 100
-                // e   : int32_t * 100
-                // E   : uint32_t * 100
-                // L   : int32_t latitude/longitude
-                // M   : uint8_t flight mode
-                // q   : int64_t
-
+            case 'c':
+                dict[i]=buffer.readInt16LE(offset)*100;
+                offset+=2;
+                break;
+            case 'C':
+                dict[i]=buffer.readUInt16LE(offset)*100;
+                offset+=2;
+                break;
+            case 'E':
+                var low = buffer.readUInt32LE(offset);
+                offset+=4;
+                var n = buffer.readUInt32LE(offset) * 4294967296.0 + low;
+                if (low < 0) n += 4294967296;
+                dict[i]=n*100;
+                offset+=4;
+                break;
+            case 'e':
+                var low = buffer.readInt32LE(offset);
+                offset+=4;
+                var n = buffer.readInt32LE(offset) * 4294967296.0 + low;
+                if (low < 0) n += 4294967296;
+                dict[i]=n*100;
+                offset+=4;
+                break;
+            case 'L':
+                dict[i]=buffer.readInt32LE(offset);
+                offset+=4;
+                break;
+            case 'i':
+                dict[i]=buffer.readUInt8(offset);
+                offset+=1;
+                break;
         }
     }
     return dict;
@@ -112,4 +144,3 @@ function DF_reader()
     }
 }
 DF_reader();
-console.log(msg_type);
