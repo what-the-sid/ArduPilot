@@ -140,6 +140,7 @@ function DF_reader()
                     'Columns': value['Columns']
                 };
             }
+            console.log(msg_type[fmt_dict.attribute].Name+":")
             console.log(value);
         }
         else break;
