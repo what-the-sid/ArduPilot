@@ -1,4 +1,3 @@
-var attr = {};
 var offset = 0;
 var i=1;
 var file=require("fs").readFileSync('2.bin');
@@ -16,42 +15,41 @@ function FORMAT_TO_STRUCT(obj)
 {
     var temp;
     var dict={};
-
-    for (var i = 0; i < obj.length; i++) {
-        temp=obj.charAt(i);
-
+    var column=assign_column(obj.Columns);
+    for (var i = 0; i < obj.Format.length; i++) {
+        temp=obj.Format.charAt(i);
         switch(temp){
 
             case 'b':
-                dict[i]=buffer.readInt8(offset);
+                dict[column[i]]=buffer.readInt8(offset);
                 offset+=1;
                 break;
             case 'B':
-                dict[i]=buffer.readUInt8(offset);
+                dict[column[i]]=buffer.readUInt8(offset);
                 offset+=1;
                 break;
             case 'h':
-                dict[i]=buffer.readInt16LE(offset);
+                dict[column[i]]=buffer.readInt16LE(offset);
                 offset+=2;
                 break;
             case 'H':
-                dict[i]=buffer.readUInt16LE(offset);
+                dict[column[i]]=buffer.readUInt16LE(offset);
                 offset+=2;
                 break;
             case 'i':
-                dict[i]=buffer.readInt32LE(offset);
+                dict[column[i]]=buffer.readInt32LE(offset);
                 offset+=4;
                 break;
             case 'I':
-                dict[i]=buffer.readUInt32LE(offset);
+                dict[column[i]]=buffer.readUInt32LE(offset);
                 offset+=4;
                 break;
             case 'f':
-                dict[i]=buffer.readFloatLE(offset);
+                dict[column[i]]=buffer.readFloatLE(offset);
                 offset+=4;
                 break;
             case 'd':
-                dict[i]=buffer.readDoubleLE(offset);
+                dict[column[i]]=buffer.readDoubleLE(offset);
                 offset+=8;
                 break;
             case 'Q':
@@ -59,7 +57,7 @@ function FORMAT_TO_STRUCT(obj)
                 offset+=4;
                 var n = buffer.readUInt32LE(offset) * 4294967296.0 + low;
                 if (low < 0) n += 4294967296;
-                dict[i]=n;
+                dict[column[i]]=n;
                 offset+=4;
                 break;
             case 'q':
@@ -67,27 +65,27 @@ function FORMAT_TO_STRUCT(obj)
                 offset+=4;
                 var n = buffer.readInt32LE(offset) * 4294967296.0 + low;
                 if (low < 0) n += 4294967296;
-                dict[i]=n;
+                dict[column[i]]=n;
                 offset+=4;
                 break;
             case 'n':
-                dict[i]=buffer.toString('ascii', offset, offset + 4).replace(/\x00+$/g, '');
+                dict[column[i]]=buffer.toString('ascii', offset, offset + 4).replace(/\x00+$/g, '');
                 offset+=4;
                 break;
             case 'N':
-                dict[i]=buffer.toString('ascii', offset, offset + 16).replace(/\x00+$/g, '');
+                dict[column[i]]=buffer.toString('ascii', offset, offset + 16).replace(/\x00+$/g, '');
                 offset+=16;
                 break;
             case 'Z':
-                dict[i]=buffer.toString('ascii', offset, offset + 64).replace(/\x00+$/g, '');
+                dict[column[i]]=buffer.toString('ascii', offset, offset + 64).replace(/\x00+$/g, '');
                 offset+=64;
                 break;
             case 'c':
-                dict[i]=buffer.readInt16LE(offset)*100;
+                dict[column[i]]=buffer.readInt16LE(offset)*100;
                 offset+=2;
                 break;
             case 'C':
-                dict[i]=buffer.readUInt16LE(offset)*100;
+                dict[column[i]]=buffer.readUInt16LE(offset)*100;
                 offset+=2;
                 break;
             case 'E':
@@ -95,7 +93,7 @@ function FORMAT_TO_STRUCT(obj)
                 offset+=4;
                 var n = buffer.readUInt32LE(offset) * 4294967296.0 + low;
                 if (low < 0) n += 4294967296;
-                dict[i]=n*100;
+                dict[column[i]]=n*100;
                 offset+=4;
                 break;
             case 'e':
@@ -103,20 +101,24 @@ function FORMAT_TO_STRUCT(obj)
                 offset+=4;
                 var n = buffer.readInt32LE(offset) * 4294967296.0 + low;
                 if (low < 0) n += 4294967296;
-                dict[i]=n*100;
+                dict[column[i]]=n*100;
                 offset+=4;
                 break;
             case 'L':
-                dict[i]=buffer.readInt32LE(offset);
+                dict[column[i]]=buffer.readInt32LE(offset);
                 offset+=4;
                 break;
             case 'i':
-                dict[i]=buffer.readUInt8(offset);
+                dict[column[i]]=buffer.readUInt8(offset);
                 offset+=1;
                 break;
         }
     }
     return dict;
+}
+function assign_column(obj){
+    var ArrayOfString=obj.split(',');
+    return ArrayOfString;
 }
 function DF_reader()
 {
@@ -128,14 +130,14 @@ function DF_reader()
         offset += 1;
 
         if(msg_type[fmt_dict.attribute]!=null) {
-            var value = FORMAT_TO_STRUCT(msg_type[fmt_dict.attribute].Format);
+            var value = FORMAT_TO_STRUCT(msg_type[fmt_dict.attribute]);
             if (fmt_dict.attribute == '128') {
-                msg_type[value[0]] = {
-                    'Type': value[0],
-                    'length': value[1],
-                    'Name': value[2],
-                    'Format': value[3],
-                    'Columns': value[4]
+                msg_type[value['Type']] = {
+                    'Type': value['Type'],
+                    'length': value['length'],
+                    'Name': value['Name'],
+                    'Format': value['Format'],
+                    'Columns': value['Columns']
                 };
             }
             console.log(value);
