@@ -1,14 +1,16 @@
 var offset = 0;
-var i=1;
 var file=require("fs").readFileSync('2.bin');
 var buffer=file;
+var FMT=[];
 var msg_type=[];
-msg_type[128]={'Type':'128','length':'89','Name':'FMT','Format':'BBnNZ','Columns':'Type,Length,Name,Format,Columns'};
+var offset_pos=[];
+
+FMT[128]={'Type':'128','length':'89','Name':'FMT','Format':'BBnNZ','Columns':'Type,Length,Name,Format,Columns'};
 
 
-if (!Buffer.isBuffer(buffer)) {
-    throw new Error("argument buffer is not a Buffer object");
-}
+ if (!Buffer.isBuffer(buffer)) {
+      throw new Error("argument buffer is not a Buffer object");
+  }
 
 
 function FORMAT_TO_STRUCT(obj)
@@ -102,6 +104,7 @@ function FORMAT_TO_STRUCT(obj)
                 var n = buffer.readInt32LE(offset) * 4294967296.0 + low;
                 if (low < 0) n += 4294967296;
                 dict[column[i]]=n*100;
+
                 offset+=4;
                 break;
             case 'L':
@@ -115,35 +118,59 @@ function FORMAT_TO_STRUCT(obj)
         }
     }
     return dict;
+
 }
+
+
+function time_stamp(TimeUs){
+    var date = new Date(TimeUs*1000);
+    var hours = date.getHours();
+    var minutes = "0" + date.getMinutes();
+    var seconds = "0" + date.getSeconds();
+    var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+    return formattedTime;
+}
+
 function assign_column(obj){
     var ArrayOfString=obj.split(',');
     return ArrayOfString;
 }
+
+
 function DF_reader()
 {
-    while(!buffer.EOF) {
-
-        var fmt_dict = {};
+    while(!buffer.size) {
         offset += 2;
-        fmt_dict.attribute = buffer.readUInt8(offset);
+        var attribute = buffer.readUInt8(offset,offset+1);
         offset += 1;
-
-        if(msg_type[fmt_dict.attribute]!=null) {
-            var value = FORMAT_TO_STRUCT(msg_type[fmt_dict.attribute]);
-            if (fmt_dict.attribute == '128') {
-                msg_type[value['Type']] = {
-                    'Type': value['Type'],
-                    'length': value['length'],
-                    'Name': value['Name'],
-                    'Format': value['Format'],
-                    'Columns': value['Columns']
-                };
+        offset_pos.push(offset);
+        msg_type.push(attribute);
+        if(FMT[attribute]!=null) {
+            try {
+                var value = FORMAT_TO_STRUCT(FMT[attribute]);
+                if (attribute == '128') {
+                    FMT[value['Type']] = {
+                        'Type': value['Type'],
+                        'length': value['length'],
+                        'Name': value['Name'],
+                        'Format': value['Format'],
+                        'Columns': value['Columns']
+                    };
+                }
+                //if (attribute == '174') {
+                    //require("fs").appendFileSync("test.txt", time_stamp(value['TimeUS']) + "," + value['AccX'] + "," + value['AccY'] + "," + value['AccZ'] + "\n");
+                //}
             }
-            console.log(msg_type[fmt_dict.attribute].Name+":")
-            console.log(value);
+            catch(err){
+                console.log(err.message);
+                break;
+            }
+            finally{
+                console.log(FMT[attribute].Name + ":");
+                console.log(value);}
         }
-        else break;
     }
+    console.log(offset_pos);
 }
+
 DF_reader();
