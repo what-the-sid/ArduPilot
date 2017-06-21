@@ -91,20 +91,11 @@ function FORMAT_TO_STRUCT(obj)
                 offset+=2;
                 break;
             case 'E':
-                var low = buffer.readUInt32LE(offset);
-                offset+=4;
-                var n = buffer.readUInt32LE(offset) * 4294967296.0 + low;
-                if (low < 0) n += 4294967296;
-                dict[column[i]]=n*100;
+                dict[column[i]]=buffer.readUInt32LE(offset)*100;
                 offset+=4;
                 break;
             case 'e':
-                var low = buffer.readInt32LE(offset);
-                offset+=4;
-                var n = buffer.readInt32LE(offset) * 4294967296.0 + low;
-                if (low < 0) n += 4294967296;
-                dict[column[i]]=n*100;
-
+                dict[column[i]]=buffer.readInt32LE(offset)*100;
                 offset+=4;
                 break;
             case 'L':
