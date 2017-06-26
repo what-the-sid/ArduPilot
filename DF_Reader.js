@@ -1,7 +1,8 @@
 var buffer=require("fs").readFileSync('2.bin');
 var FMT=[];
 var offset = 0;
-var toGraph=[];
+var offsetArray=[];
+var msgType=[];
 
 FMT[128]={'Type':'128','length':'89','Name':'FMT','Format':'BBnNZ','Columns':'Type,Length,Name,Format,Columns'};
 
@@ -109,11 +110,11 @@ function FORMAT_TO_STRUCT(obj)
 }
 
 function parse_atOffset(type){
-    for(var i=0;i<toGraph.length;i++)
+    for(var i=0;i<msgType.length;i++)
     {
-        if(toGraph[i].Type==type) {
-            offset = toGraph[i].Offset;
-            console.log(FORMAT_TO_STRUCT(toGraph[i]));
+        if(msgType[i]==type) {
+            offset = offsetArray[i];
+            console.log(FORMAT_TO_STRUCT(FMT[msgType[i]]));
         }
     }
 }
@@ -139,7 +140,8 @@ function DF_reader()
         offset += 2;
         var attribute = buffer.readUInt8(offset,offset+1);
         offset += 1;
-        var tempOffset=offset;
+        offsetArray.push(offset);
+        msgType.push(attribute);
         if(FMT[attribute]!=null) {
             try {
                 var value=FORMAT_TO_STRUCT(FMT[attribute]);
@@ -152,7 +154,6 @@ function DF_reader()
                         'Columns': value['Columns']
                     };
                 }
-                toGraph.push({"Type":attribute,"Offset":tempOffset,"Format":FMT[attribute].Format,"Columns":FMT[attribute].Columns});
             }
             catch(err){
                 //console.log(err.message);
@@ -166,4 +167,4 @@ function DF_reader()
 }
 
 DF_reader();
-parse_atOffset(177);
+parse_atOffset(174);
