@@ -1,9 +1,7 @@
-var offset = 0;
-var file=require("fs").readFileSync('2.bin');
-var buffer=file;
+var buffer=require("fs").readFileSync('2.bin');
 var FMT=[];
-var msg_type=[];
-var offset_pos=[];
+var offset = 0;
+var toGraph=[];
 
 FMT[128]={'Type':'128','length':'89','Name':'FMT','Format':'BBnNZ','Columns':'Type,Length,Name,Format,Columns'};
 
@@ -21,7 +19,6 @@ function FORMAT_TO_STRUCT(obj)
     for (var i = 0; i < obj.Format.length; i++) {
         temp=obj.Format.charAt(i);
         switch(temp){
-
             case 'b':
                 dict[column[i]]=buffer.readInt8(offset);
                 offset+=1;
@@ -109,9 +106,17 @@ function FORMAT_TO_STRUCT(obj)
         }
     }
     return dict;
-
 }
 
+function parse_atOffset(type){
+    for(var i=0;i<toGraph.length;i++)
+    {
+        if(toGraph[i].Type==type) {
+            offset = toGraph[i].Offset;
+            console.log(FORMAT_TO_STRUCT(toGraph[i]));
+        }
+    }
+}
 
 function time_stamp(TimeUs){
     var date = new Date(TimeUs*1000);
@@ -134,11 +139,10 @@ function DF_reader()
         offset += 2;
         var attribute = buffer.readUInt8(offset,offset+1);
         offset += 1;
-        offset_pos.push(offset);
-        msg_type.push(attribute);
+        var tempOffset=offset;
         if(FMT[attribute]!=null) {
             try {
-                var value = FORMAT_TO_STRUCT(FMT[attribute]);
+                var value=FORMAT_TO_STRUCT(FMT[attribute]);
                 if (attribute == '128') {
                     FMT[value['Type']] = {
                         'Type': value['Type'],
@@ -148,20 +152,18 @@ function DF_reader()
                         'Columns': value['Columns']
                     };
                 }
-                //if (attribute == '174') {
-                    //require("fs").appendFileSync("test.txt", time_stamp(value['TimeUS']) + "," + value['AccX'] + "," + value['AccY'] + "," + value['AccZ'] + "\n");
-                //}
+                toGraph.push({"Type":attribute,"Offset":tempOffset,"Format":FMT[attribute].Format,"Columns":FMT[attribute].Columns});
             }
             catch(err){
-                console.log(err.message);
+                //console.log(err.message);
                 break;
             }
             finally{
-                console.log(FMT[attribute].Name + ":");
-                console.log(value);}
+            }
         }
     }
-    console.log(offset_pos);
+    //console.log(toGraph);
 }
 
 DF_reader();
+parse_atOffset(177);
