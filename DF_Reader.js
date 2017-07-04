@@ -1,16 +1,15 @@
 var buffer;
 var data;
 var FMT=[];
+var x_plot=[];
+var y_plot=[];
+var z_plot=[];
+var label_plot=[];
 var offset = 0;
 var offsetArray=[];
 var msgType=[];
 
 FMT[128]={'Type':'128','length':'89','Name':'FMT','Format':'BBnNZ','Columns':'Type,Length,Name,Format,Columns'};
-
-
- //if (!Buffer.isBuffer(buffer)) {
-      //throw new Error("argument buffer is not a Buffer object");
-  //}
 
 
 function FORMAT_TO_STRUCT(obj)
@@ -112,6 +111,14 @@ function FORMAT_TO_STRUCT(obj)
     return dict;
 }
 
+function toGraph(value1,value2,value3,value4)
+{
+  x_plot.push(value1);
+  y_plot.push(value2);
+  label_plot.push(value3);
+  z_plot.push(value4);
+}
+
 function parse_atOffset(type){
      var count=0;
     for(var i=0;i<msgType.length;i++)
@@ -119,10 +126,11 @@ function parse_atOffset(type){
         if(msgType[i]==type) {
             count++;
             offset = offsetArray[i];
-            console.log(FORMAT_TO_STRUCT(FMT[msgType[i]]));
+            var temp=FORMAT_TO_STRUCT(FMT[msgType[i]]);
+            var time=time_stamp(temp.TimeUS);
+            toGraph(temp.AccX,temp.AccY,time,temp.AccZ);
         }
     }
-    console.log(count);
 }
 
 function time_stamp(TimeUs){
