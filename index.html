@@ -7,14 +7,79 @@
     overflow-y: auto;
     overflow-x: hidden;
   }
+  canvas{
+      -moz-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+  }
 </style>
 <input type="file" id="files" name="file" />
 <script type="text/javascript" src="FMT_reader.js"></script>
+<script type="text/javascript" src="chart.js"></script>
+<script type="text/javascript" src="utils.js"></script>
 <span class="readBytesButtons">
   <button>Parse Log</button>
 </span>
-<div id="byte_content"></div>
+<div style="width:75%;">
+    <canvas id="canvas"></canvas>
+</div>
 <script>
+        var config = {
+        type: 'line',
+        data: {
+            labels:label_plot,
+            datasets: [{
+                label: "ACCx",
+                backgroundColor: window.chartColors.red,
+                borderColor: window.chartColors.red,
+                data:x_plot,
+                fill: false,
+            }, {
+                label: "ACCy",
+                fill: false,
+                backgroundColor: window.chartColors.blue,
+                borderColor: window.chartColors.blue,
+                data:y_plot,
+            },{
+                label: "ACCz",
+                fill: false,
+                backgroundColor: window.chartColors.green,
+                borderColor: window.chartColors.green,
+                data:z_plot,
+            }]
+        },
+        options: {
+            responsive: true,
+            title:{
+                display:true,
+                text:'arduPilot graphing system'
+            },
+            tooltips: {
+                mode: 'index',
+                intersect: false,
+            },
+            hover: {
+                mode: 'nearest',
+                intersect: true
+            },
+            scales: {
+                xAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'time'
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'acc'
+                    }
+                }]
+            }
+        }
+    };
 
   function readBlob(opt_startByte, opt_stopByte) {
 
@@ -37,7 +102,8 @@
         data=new DataView(buffer);
         DF_reader();
         parse_atOffset(174);
-        document.getElementById('byte_content').textContent = FMT[174].Format;
+        var ctx = document.getElementById("canvas").getContext("2d");
+        window.myLine = new Chart(ctx, config);
       }
     };
 
