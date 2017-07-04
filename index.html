@@ -1,0 +1,58 @@
+<html>
+<body>
+<style>
+  #byte_content {
+    margin: 5px 0;
+    max-height: 100px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+</style>
+<input type="file" id="files" name="file" />
+<script type="text/javascript" src="FMT_reader.js"></script>
+<span class="readBytesButtons">
+  <button>Parse Log</button>
+</span>
+<div id="byte_content"></div>
+<script>
+
+  function readBlob(opt_startByte, opt_stopByte) {
+
+    var files = document.getElementById('files').files;
+    if (!files.length) {
+      alert('Please select a file!');
+      return;
+    }
+    var file = files[0];
+    var start = 0;
+    var stop = file.size - 1;
+
+    var reader = new FileReader();
+
+    // If we use onloadend, we need to check the readyState.
+    reader.onloadend = function(evt) {
+
+      if (evt.target.readyState == FileReader.DONE) {
+        buffer=evt.target.result;
+        data=new DataView(buffer);
+        DF_reader();
+        parse_atOffset(174);
+        document.getElementById('byte_content').textContent = FMT[174].Format;
+      }
+    };
+
+    var blob = file.slice(start, stop + 1);
+    reader.readAsArrayBuffer(blob);
+}
+
+  document.querySelector('.readBytesButtons').addEventListener('click', function(evt) {
+    if (evt.target.tagName.toLowerCase() == 'button') {
+      var startByte = evt.target.getAttribute('data-startbyte');
+      var endByte = evt.target.getAttribute('data-endbyte');
+      readBlob(startByte, endByte);
+
+    }
+  }, false);
+</script>
+</body>
+</html>
