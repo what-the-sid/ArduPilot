@@ -98,10 +98,11 @@
     reader.onloadend = function(evt) {
 
       if (evt.target.readyState == FileReader.DONE) {
-        buffer=evt.target.result;
-        data=new DataView(buffer);
-        DF_reader();
-        parse_atOffset(174);
+        var parser=new Parser;
+        parser.buffer=evt.target.result;
+        data=new DataView(parser.buffer);
+        parser.DF_reader();
+        parser.parse_atOffset(174);
         var ctx = document.getElementById("canvas").getContext("2d");
         window.myLine = new Chart(ctx, config);
       }
