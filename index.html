@@ -70,7 +70,6 @@ xhttp.onloadend = function() {
     var start = 0;
     var stop = file.size;
     var reader = new FileReader();
-    var xhttp = new XMLHttpRequest();
     reader.onloadend = function(evt) {
 
       if (evt.target.readyState == FileReader.DONE) {
