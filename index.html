@@ -52,6 +52,13 @@ body {margin:0;}
       <canvas id="canvas"></canvas>
 </div>
 <script>
+var xmlDoc;
+var xhttp = new XMLHttpRequest();
+xhttp.open("GET","graphs_list.xml", true);
+xhttp.send();
+xhttp.onloadend = function() {
+      xmlDoc=this.responseXML;  //xmlReader(this.responseXML);
+};
   function readBlob(opt_startByte, opt_stopByte) {
     var ctx = document.getElementById("canvas").getContext("2d");
     var files = document.getElementById('files').files;
@@ -62,14 +69,8 @@ body {margin:0;}
     var file = files[0];
     var start = 0;
     var stop = file.size;
-    var xmlDoc;
     var reader = new FileReader();
     var xhttp = new XMLHttpRequest();
-    xhttp.open("GET","graphs_list.xml", true);
-    xhttp.send();
-    xhttp.onloadend = function() {
-          xmlDoc=this.responseXML;  //xmlReader(this.responseXML);
-    };
     reader.onloadend = function(evt) {
 
       if (evt.target.readyState == FileReader.DONE) {
