@@ -145,14 +145,13 @@ function assign_column(obj){
 
 Parser.prototype.DF_reader=function()
 {
-    while(!this.buffer.length) {
+    while(offset!=this.buffer.length) {
         this.offset += 2;
         var attribute = this.data.getUint8(this.offset);
         this.offset += 1;
         this.offsetArray.push(this.offset);
         this.msgType.push(attribute);
         if(this.FMT[attribute]!=null) {
-                try{
                 var value = this.FORMAT_TO_STRUCT(this.FMT[attribute]);
                 //console.log(value);
                 if (attribute == '128') {
