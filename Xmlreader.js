@@ -1,4 +1,5 @@
 var graphSelector=function(){
+  this.type;
   this.button=[];
   this.xmlDoc;
   this.dataSet;
@@ -42,6 +43,18 @@ var graphSelector=function(){
   };
 }
 
+function getMsgType(element,fmt){
+  for(i=0;i<fmt.length;i++)
+  {
+    if(fmt[i]!=null)
+    {
+      if(fmt[i].Name==element){
+        return i;
+      }
+    }
+  }
+}
+
 function split(obj){
     var ArrayOfString=obj.split(' ');
     return ArrayOfString;
@@ -61,7 +74,7 @@ graphSelector.prototype.clear=function(){
   var txt="";
   return txt;
 }
-graphSelector.prototype.xmlReader = function (type) {
+graphSelector.prototype.xmlReader = function () {
   var element,count=0;
   var temp=this.xmlDoc.getElementsByTagName("type");
   var name=this.xmlDoc.getElementsByTagName("graph");
@@ -70,11 +83,15 @@ graphSelector.prototype.xmlReader = function (type) {
     element=split(temp[i].childNodes[0].nodeValue);
     for(j=0;j<element.length;j++)
     {
-        if(parseInt(element[j])==type[parseInt(element[j])].Type){
+      for(k=0;k<this.type.length;k++){
+        if(this.type[k]!=null){
+        if(element[j]==this.type[k].Name){
           count++;
       }
     }
-    if(count>=1)
+    }
+    }
+    if(count==element.length)
     {
     this.button.push(name[i].getAttributeNode("name").nodeValue);
     count=0;}
@@ -113,10 +130,10 @@ graphSelector.prototype.dataSet=function(getId,parser,color)
           {
             if(element2[k] == 'TimeUS')
             {
-              this.label=parser.parse_atOffset(element[j],element2[k]);
+              this.label=parser.parse_atOffset(getMsgType(element[j],this.type),element2[k]);
             }
             else{
-              this.data=parser.parse_atOffset(element[j],element2[k]);
+              this.data=parser.parse_atOffset(getMsgType(element[j],this.type),element2[k]);
               this.graphConfig(element2[k],this.data,color,this.label);
             }
           }
