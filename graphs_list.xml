@@ -1,6 +1,6 @@
 <graphs>
   <graph name="Speed/Ground vs Air Speed">
-    <type>130 161</type>
+    <type>GPS ARSP</type>
     <expression>TimeUS Spd Airspeed</expression>
     <description>
       This shows the ground speed of the vehicle versus its air speed
@@ -8,7 +8,7 @@
   </graph>
 
   <graph name="Speed/Ground Speed">
-    <type>130</type>
+    <type>GPS</type>
     <expression>TimeUS Spd</expression>
     <description>
       This shows the ground speed of the vehicle
@@ -16,97 +16,97 @@
   </graph>
 
   <graph name='Attitude/Roll and Pitch'>
-    <type>162</type>
+    <type>ATT</type>
     <description>Roll and Pitch</description>
     <expression>TimeUS Roll Pitch</expression>
   </graph>
 
   <graph name='Attitude/RP Comparison'>
-    <type>162 140</type>
+    <type>ATT AHR2</type>
     <description>Roll and pitch comparison between primary and secondary attitude estimator</description>
     <expression>TimeUS Roll Pitch</expression>
   </graph>
 
   <graph name='Attitude/Attitude Control'>
-    <type>162 4</type>
+    <type>ATT CTUN</type>
   <description>Desired versus achieved roll and pitch. This shows you how well the attitude controller are for your aircraft. In a well tuned aircraft the desired and achieved roll and pitch should match to within a couple of degrees for any portion of the flight where stabilisation is enabled.</description>
     <expression>TimeUS NavRoll Roll NavPitch Pitch</expression>
   </graph>
 
   <graph name='Sensors/Accelerometer/Accelerometers'>
-    <type>173</type>
+    <type>ACC1</type>
     <description>Accelerometer Output</description>
     <expression>TimeUS AccX AccY AccZ</expression>
   </graph>
 
   <graph name='Sensors/Accelerometer/Accelerometer(2)'>
-    <type>174</type>
+    <type>ACC2</type>
     <description>Accelerometer Two Output</description>
     <expression>TimeUS AccX AccY AccZ</expression>
   </graph>
 
   <graph name='Sensors/Accelerometer/Accelerometer(3)'>
-    <type>146</type>
+    <type>ACC3</type>
     <description>Accelerometer Three Output</description>
     <expression>TimeUS AccX AccY AccZ</expression>
   </graph>
 
   <graph name='Sensors/Accelerometer/Accelerometer Comparison'>
-    <type>132 137 146</type>
+    <type>ACC1 ACC2 ACC3</type>
     <description>Accelerometer Comparison</description>
     <expression>TimeUS AccX AccY AccZ</expression>
   </graph>
 
   <graph name='Sensors/Gyroscope/Gyros'>
-    <type>176</type>
+    <type>GYR1</type>
     <description>Gyroscope Output</description>
     <expression>TimeUS GyrX GyrY GyrZ</expression>
   </graph>
 
   <graph name='Sensors/Gyroscope/Gyros(2)'>
-    <type>177</type>
+    <type>GYR2</type>
     <description>Gyroscope Two Output</description>
     <expression>TimeUS GyrX GyrY GyrZ</expression>
   </graph>
 
   <graph name='Sensors/Gyroscope/Gyros(3)'>
-    <type>178</type>
+    <type>GYR3</type>
     <description>Gyroscope Three Output</description>
     <expression>TimeUS GyrX GyrY GyrZ</expression>
   </graph>
 
   <graph name='Sensors/Gyroscope/Gyro Comparison'>
-    <type>132 137 146</type>
+    <type>GYR1 GYR2 GYR3</type>
     <description>Gyroscope Comparison</description>
     <expression>TimeUS GyrX GyrY GyrZ</expression>
   </graph>
 
   <graph name='Sensors/Barometer/Barometer'>
-    <type>138</type>
+    <type>BARO</type>
     <description>Barometer</description>
     <expression>TimeUS Alt Temp</expression>
   </graph>
 
   <graph name='Sensors/Barometer/Barometer(2)'>
-    <type>160</type>
+    <type>BAR2</type>
     <description>Barometric Altitude</description>
     <expression>TimeUS Alt Temp</expression>
   </graph>
 
   <graph name='Sensors/Barometer/Barometer(3)'>
-    <type>194</type>
+    <type>BAR3</type>
     <description>Barometric Altitude</description>
     <expression>TimeUS Alt Temp</expression>
   </graph>
 
   <graph name='Sensors/Barometer/Barometer Comparison'>
-    <type>138 160 194</type>
+    <type>BARO BAR1 BAR2</type>
     <description>TimeUS Barometer Comparison</description>
     <expression>TimeUS Alt Temp</expression>
   </graph>
 
   <graph name='Sensors/Barometer/Barometric Pressure'>
-    <type>138</type>
+    <type>BARO</type>
     <description>Barometric Pressure</description>
     <expression>TimeUS Press</expression>
   </graph>
