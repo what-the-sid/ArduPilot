@@ -167,4 +167,3 @@ Parser.prototype.DF_reader=function()
         }
         else break;
     }
-}
