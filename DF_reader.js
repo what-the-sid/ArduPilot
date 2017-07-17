@@ -164,9 +164,6 @@ Parser.prototype.DF_reader=function()
                     };
                 }
               }
-              catch(err){
-                break;
-              }
         }
         else break;
     }
