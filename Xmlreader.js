@@ -115,7 +115,7 @@ graphSelector.prototype.graphConfig=function(Label,Data,colorNames,time,name)
 
 graphSelector.prototype.dataSet=function(getId,parser,color)
 {
-  var element,element2,TimeUs;
+  var element,element2,TimeUs,element3;
   var id=getId;
   var name=this.xmlDoc.getElementsByTagName("graph");
   var temp=this.xmlDoc.getElementsByTagName("type");
@@ -135,9 +135,12 @@ graphSelector.prototype.dataSet=function(getId,parser,color)
             }
             else{
               this.data=parser.parse_atOffset(getMsgType(element[j],this.type),element2[k]);
-              this.graphConfig(element2[k],this.data,color,this.label,id);
+              if(this.data!=null){
+              element3=element[j] + "." + element2[k] + "  ";
+              this.graphConfig(element3,this.data,color,this.label,id);
+              }
             }
-          }
+            }
         }
     }
     }
