@@ -145,7 +145,7 @@ function assign_column(obj){
 
 Parser.prototype.DF_reader=function()
 {
-    while(offset!=this.buffer.length) {
+    while(this.offset!=this.buffer.length) {
         this.offset += 2;
         var attribute = this.data.getUint8(this.offset);
         this.offset += 1;
