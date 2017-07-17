@@ -70,6 +70,7 @@ xhttp.onloadend = function() {
     var start = 0;
     var stop = file.size;
     var reader = new FileReader();
+    var xhttp = new XMLHttpRequest();
     reader.onloadend = function(evt) {
 
       if (evt.target.readyState == FileReader.DONE) {
@@ -82,7 +83,8 @@ xhttp.onloadend = function() {
         parser.buffer=evt.target.result;
         parser.data=new DataView(parser.buffer);
         parser.DF_reader();
-        graph.xmlReader(parser.FMT);
+        graph.type=parser.FMT;
+        graph.xmlReader();
         for(i=0;i<graph.button.length;i++)
         {
           txt+="<button id='"+graph.button[i]+"' class='buttonGroup'"+">"+graph.button[i]+"</button>";
