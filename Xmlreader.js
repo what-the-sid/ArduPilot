@@ -13,7 +13,7 @@ var graphSelector=function(){
           responsive: true,
           title:{
               display:true,
-              text:'Chart.js Line Chart'
+              text:''
           },
           tooltips: {
               mode: 'index',
@@ -97,7 +97,7 @@ graphSelector.prototype.xmlReader = function () {
     count=0;}
   }
 }
-graphSelector.prototype.graphConfig=function(Label,Data,colorNames,time)
+graphSelector.prototype.graphConfig=function(Label,Data,colorNames,time,name)
 {
   var colorName = colorNames[this.config.data.datasets.length % colorNames.length];
   var newColor = window.chartColors[colorName];
@@ -110,6 +110,7 @@ graphSelector.prototype.graphConfig=function(Label,Data,colorNames,time)
   };
   this.config.data.labels=time;
   this.config.data.datasets.push(newDataset);
+  this.config.options.title.text=name;
 }
 
 graphSelector.prototype.dataSet=function(getId,parser,color)
@@ -134,7 +135,7 @@ graphSelector.prototype.dataSet=function(getId,parser,color)
             }
             else{
               this.data=parser.parse_atOffset(getMsgType(element[j],this.type),element2[k]);
-              this.graphConfig(element2[k],this.data,color,this.label);
+              this.graphConfig(element2[k],this.data,color,this.label,id);
             }
           }
         }
