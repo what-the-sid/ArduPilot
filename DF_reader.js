@@ -116,7 +116,7 @@ Parser.prototype.parse_atOffset=function(type,name){
   var num=0;
     for(var i=0;i<this.msgType.length;i++)
     {
-        if(this.msgType[i]==type && num<150) {
+        if(this.msgType[i]==type && num<125) {
           num+=1;
             this.offset = this.offsetArray[i];
             var temp=this.FORMAT_TO_STRUCT(this.FMT[this.msgType[i]]);
@@ -145,13 +145,14 @@ function assign_column(obj){
 
 Parser.prototype.DF_reader=function()
 {
-    while(this.offset!=this.buffer.length) {
+    while(this.offset<=this.data.byteLength) {
         this.offset += 2;
         var attribute = this.data.getUint8(this.offset);
         this.offset += 1;
         this.offsetArray.push(this.offset);
         this.msgType.push(attribute);
         if(this.FMT[attribute]!=null) {
+                try{
                 var value = this.FORMAT_TO_STRUCT(this.FMT[attribute]);
                 //console.log(value);
                 if (attribute == '128') {
@@ -164,5 +165,10 @@ Parser.prototype.DF_reader=function()
                     };
                 }
               }
+              catch(err){
+                console.log(err);
+                break;
+              }
         }
     }
+}
