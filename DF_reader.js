@@ -111,7 +111,20 @@ Parser.prototype.FORMAT_TO_STRUCT = function(obj)
     return dict;
 }
 
+Parser.prototype.getMsgType=function(element){
+  for(i=0;i<this.FMT.length;i++)
+  {
+    if(this.FMT[i]!=null)
+    {
+      if(this.FMT[i].Name==element){
+        return i;
+      }
+    }
+  }
+}
+
 Parser.prototype.parse_atOffset=function(type,name){
+  type=this.getMsgType(type);
   var parsed=[];
   var num=0;
     for(var i=0;i<this.msgType.length;i++)
@@ -145,7 +158,7 @@ function assign_column(obj){
 
 Parser.prototype.DF_reader=function()
 {
-    while(this.offset<=this.data.byteLength) {
+    while(1) {
         this.offset += 2;
         var attribute = this.data.getUint8(this.offset);
         this.offset += 1;
