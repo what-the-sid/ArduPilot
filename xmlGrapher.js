@@ -43,18 +43,6 @@ var graphSelector=function(){
   };
 }
 
-function getMsgType(element,fmt){
-  for(i=0;i<fmt.length;i++)
-  {
-    if(fmt[i]!=null)
-    {
-      if(fmt[i].Name==element){
-        return i;
-      }
-    }
-  }
-}
-
 function split(obj){
     var ArrayOfString=obj.split(' ');
     return ArrayOfString;
@@ -131,10 +119,10 @@ graphSelector.prototype.dataSet=function(getId,parser,color)
           {
             if(element2[k] == 'TimeUS')
             {
-              this.label=parser.parse_atOffset(getMsgType(element[j],this.type),element2[k]);
+              this.label=parser.parse_atOffset(element[j],element2[k]);
             }
             else{
-              this.data=parser.parse_atOffset(getMsgType(element[j],this.type),element2[k]);
+              this.data=parser.parse_atOffset(element[j],element2[k]);
               if(this.data!=null){
               element3=element[j] + "." + element2[k] + "  ";
               this.graphConfig(element3,this.data,color,this.label,id);
