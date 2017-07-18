@@ -36,6 +36,7 @@ body {margin:0;}
   margin-bottom: 70px;
   height: 500px; /* Used in this example to enable scrolling */
 }
+
 </style>
 <body>
 <input type="file" id="files" name="file" />
@@ -46,6 +47,7 @@ body {margin:0;}
 <span class="readBytesButtons">
   <button>Parse Log</button>
 </span>
+<p id="load"></p>
 <div id="buttons"></div>
 <p id="description"></p>
 <div class="main">
@@ -60,6 +62,7 @@ xhttp.onloadend = function() {
       xmlDoc=this.responseXML;  //xmlReader(this.responseXML);
 };
   function readBlob(opt_startByte, opt_stopByte) {
+    document.getElementById("load").innerHTML = "Parsing....Please wait";
     var ctx = document.getElementById("canvas").getContext("2d");
     var files = document.getElementById('files').files;
     if (!files.length) {
@@ -83,6 +86,7 @@ xhttp.onloadend = function() {
         parser.buffer=evt.target.result;
         parser.data=new DataView(parser.buffer);
         parser.DF_reader();
+        document.getElementById("load").innerHTML="";
         graph.type=parser.FMT;
         graph.xmlReader();
         for(i=0;i<graph.button.length;i++)
