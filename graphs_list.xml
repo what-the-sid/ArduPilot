@@ -111,110 +111,75 @@
     <expression>TimeUS Press</expression>
   </graph>
 
-  <!-- <graph name='Sensors/Compass/Compass' keyword="Shvhbhjb">
-    <type></type>
+  <graph name='Sensors/Compass/Compass'>
+    <type>MAG</type>
     <description>Primary Compass</description>
-    <expression>RAW_IMU.xmag RAW_IMU.ymag RAW_IMU.zmag mag_field(RAW_IMU)</expression>
-    <expression>MAG.MagX MAG.MagY MAG.MagZ sqrt(MAG.MagX**2+MAG.MagY**2+MAG.MagZ**2)</expression>
+    <expression>TimeUS MagX MagY MagZ</expression>
   </graph>
 
-  <graph name='Sensors/Compass/Compass(2)' keyword="Shvhbhjb">
-    <type></type>
+  <graph name='Sensors/Compass/Compass(2)'>
+    <type>MAG2</type>
     <description>Second Compass</description>
-    <expression>SCALED_IMU2.xmag SCALED_IMU2.ymag SCALED_IMU2.zmag mag_field(SCALED_IMU2)</expression>
-    <expression>MAG2.MagX MAG2.MagY MAG2.MagZ sqrt(MAG2.MagX**2+MAG2.MagY**2+MAG2.MagZ**2)</expression>
+    <expression>TimeUS MagX MagY MagZ</expression>
   </graph>
 
-  <graph name='Sensors/Compass/Compass(3)' keyword="Shvhbhjb">
-    <type></type>
+  <graph name='Sensors/Compass/Compass(3)'>
+    <type>MAG3</type>
     <description>Third Compass</description>
-    <expression>SCALED_IMU3.xmag SCALED_IMU3.ymag SCALED_IMU3.zmag mag_field(SCALED_IMU2)</expression>
-    <expression>MAG3.MagX MAG3.MagY MAG3.MagZ sqrt(MAG3.MagX**2+MAG3.MagY**2+MAG3.MagZ**2)</expression>
+    <expression>TimeUS MagX MagY MagZ</expression>
   </graph>
 
-  <graph name='Sensors/Compass/Compass vs Yaw' keyword="Shvhbhjb">
-    <type></type>
+  <graph name='Sensors/Compass/Compass vs Yaw'>
+    <type>MAG aTT</type>
     <description>Primary Compass vs Yaw</description>
-    <expression>mag_heading(RAW_IMU,ATTITUDE) degrees(ATTITUDE.yaw)</expression>
-    <expression>mag_heading_df(MAG,ATT) ATT.Yaw</expression>
+    <expression>TimeUS MagX MagY MagZ Yaw</expression>
   </graph>
 
-  <graph name='Servos/Servos 1-4' keyword="Shvhbhjb">
-    <type></type>
+  <graph name='Servos/Servos 1-4'>
+    <type>RCOU</type>
     <description>First 4 servo outputs</description>
-    <expression>
-      SERVO_OUTPUT_RAW.servo1_raw SERVO_OUTPUT_RAW.servo2_raw SERVO_OUTPUT_RAW.servo3_raw SERVO_OUTPUT_RAW.servo4_raw
-    </expression>
-    <expression>
-      RCOU.Ch1 RCOU.Ch2 RCOU.Ch3 RCOU.Ch4
-    </expression>
-    <expression>
-      RCOU.C1 RCOU.C2 RCOU.C3 RCOU.C4
-    </expression>
+    <expression>C1 C2 C3 C4</expression>
   </graph>
 
-  <graph name='Servos/Servos 1-8' keyword="Shvhbhjb">
-    <type></type>
+  <graph name='Servos/Servos 1-8'>
+    <type>RCOU</type>
     <description>First 8 servo outputs</description>
-    <expression>
-      SERVO_OUTPUT_RAW.servo1_raw SERVO_OUTPUT_RAW.servo2_raw SERVO_OUTPUT_RAW.servo3_raw SERVO_OUTPUT_RAW.servo4_raw
-      SERVO_OUTPUT_RAW.servo5_raw SERVO_OUTPUT_RAW.servo6_raw SERVO_OUTPUT_RAW.servo7_raw SERVO_OUTPUT_RAW.servo8_raw
-    </expression>
-    <expression>
-      RCOU.Ch1 RCOU.Ch2 RCOU.Ch3 RCOU.Ch4
-      RCOU.Ch5 RCOU.Ch6 RCOU.Ch7 RCOU.Ch8
-    </expression>
-    <expression>
-      RCOU.C1 RCOU.C2 RCOU.C3 RCOU.C4
-      RCOU.C5 RCOU.C6 RCOU.C7 RCOU.C8
+    <expression>C1 C2 C3 C4 C5 C6 C7 C8
     </expression>
   </graph>
 
-  <graph name='RC/RC Input 1-4' keyword="Shvhbhjb">
-    <type></type>
+  <graph name='RC/RC Input 1-4'>
+    <type>RCIN</type>
     <description>First 4 RC inputs</description>
-    <expression>
-      RC_CHANNELS_RAW.chan1_raw RC_CHANNELS_RAW.chan2_raw RC_CHANNELS_RAW.chan3_raw RC_CHANNELS_RAW.chan4_raw
-    </expression>
-    <expression>
-      RCIN.C1 RCIN.C2 RCIN.C3 RCIN.C4
-    </expression>
+    <expression>C1 C2 C3 C4</expression>
   </graph>
 
-  <graph name='RC/RC Input 1-8' keyword="Shvhbhjb">
-    <type></type>
+  <graph name='RC/RC Input 1-8'>
+    <type>RCIN</type>
     <description>First 8 RC inputs</description>
-    <expression>
-      RC_CHANNELS_RAW.chan1_raw RC_CHANNELS_RAW.chan2_raw RC_CHANNELS_RAW.chan3_raw RC_CHANNELS_RAW.chan4_raw
-      RC_CHANNELS_RAW.chan5_raw RC_CHANNELS_RAW.chan6_raw RC_CHANNELS_RAW.chan7_raw RC_CHANNELS_RAW.chan8_raw
-    </expression>
-    <expression>
-      RCIN.C1 RCIN.C2 RCIN.C3 RCIN.C4
-      RCIN.C5 RCIN.C6 RCIN.C7 RCIN.C8
-    </expression>
+    <expression>C1 C2 C3 C4 C5 C6 C7 C8</expression>
   </graph>
-
- <graph name='Sensors/Lidar/Rangefinder vs Baro' keyword="Shvhbhjb">
-   <type></type>
+  
+ <graph name='Sensors/Lidar/Rangefinder vs Baro'>
+   <type>BARO RFND</type>
   <description>Rangefinders vs Barometric Altitude</description>
-  <expression>BARO.Alt RFND.Dist1 RFND.Dist2</expression>
- </graph>
+  <expression>Alt Dist1 Dist2</expression>
+</graph>
 
- <graph name='Plane/PID Tuning/Pitch Controller' keyword="Shvhbhjb">
-   <type></type>
+<graph name='Plane/PID Tuning/Pitch Controller'>
+   <type>PIDP GYR1</type>
   <description>This shows how well the pitch controller is tracking the desired pitch rate.
 For a well tuned aircraft PIDP.Des should match the smoothed IMU.GyrY value.
 If PIDP.I has a constant positive value then it means the aircraft is a bit tail heavy, and the integrator is learning the elevator offset needed to keep the aircraft level. If PIDP.I has a constant negative value then the aircraft is a bit nose heavy.
 You should also check PIDP.D and look for signs of oscillation, in which case PTCH2SRV_D is too high.</description>
-  <expression>PIDP.Des PIDP.P PIDP.I PIDP.D lowpass(degrees(IMU.GyrY),"gy",0.9)</expression>
+  <expression>TimeUS Des P I D GyrY</expression>
  </graph>
 
- <graph name='Plane/PID Tuning/Roll Controller' keyword="Shvhbhjb">
-   <type></type>
+ <graph name='Plane/PID Tuning/Roll Controller'>
+   <type>PIDP GYR1</type>
   <description>This shows how well the roll controller is tracking the desired roll rate.
 For a well tuned aircraft PIDR.Des should match the smoothed IMU.GyrX value.
 If PIDR.I has a constant positive value then it means the aircraft is trimmed to roll to the left side, and the integrator is learning the aileron offset needed to keep the aircraft level. If PIDR.I has a constant negative value then the aircraft is trimmed a bit to the right.</description>
-  <expression>PIDR.Des PIDR.P PIDR.I PIDR.D lowpass(degrees(IMU.GyrX),"gx",0.9)</expression>
-</graph>-->
+  <expression>TimeUS Des P I D GyrX</expression></graph>
 
 </graphs>
