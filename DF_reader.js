@@ -160,10 +160,10 @@ Parser.prototype.DF_reader=function()
     while(this.offset<(this.buffer.byteLength-64)) {
         this.offset += 2;
         var attribute = this.data.getUint8(this.offset);
-        this.offset += 1;
-        this.offsetArray.push(this.offset);
-        this.msgType.push(attribute);
         if(this.FMT[attribute]!=null) {
+                this.offset += 1;
+                this.offsetArray.push(this.offset);
+                this.msgType.push(attribute);
                 var value = this.FORMAT_TO_STRUCT(this.FMT[attribute]);
                 //console.log(value);
                 if (attribute == '128') {
@@ -175,6 +175,9 @@ Parser.prototype.DF_reader=function()
                         'Columns': value['Columns']
                     };
                 }
+        }
+        else{
+          this.offset+=1;
         }
 }
 }
