@@ -15,6 +15,17 @@ var graphSelector=function(){
               display:true,
               text:''
           },
+          animation: {
+        duration: 2000,
+        onProgress: function(animation) {
+            progress.value = animation.currentStep / animation.numSteps;
+        },
+        onComplete: function(animation) {
+            window.setTimeout(function() {
+                progress.value = 0;
+            }, 2000);
+        }
+    },
           tooltips: {
               mode: 'index',
               intersect: false,
@@ -38,7 +49,15 @@ var graphSelector=function(){
                       labelString: 'Data'
                   }
               }]
-          }
+          },
+          pan: {
+            enabled: true,
+            mode: 'xy',
+          },
+          zoom: {
+            enabled: true,
+            mode: 'xy',
+          },
       }
   };
 }
