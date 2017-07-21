@@ -44,17 +44,22 @@ body {margin:0;}
 <script type="text/javascript" src="DF_reader.js"></script>
 <script type="text/javascript" src="chart.js"></script>
 <script type="text/javascript" src="util.js"></script>
+<script src="moment.js"></script>
+<script src="hammer.js"></script>
+<script src="chartjs-plugin-zoom.js"></script>
 <span class="readBytesButtons">
   <button>Parse Log</button>
 </span>
 <p id="load"></p>
 <div id="buttons"></div>
 <p id="description"></p>
+<progress id="animationProgress" max="1" value="0" style="width: 100%"></progress>
 <div class="main">
       <canvas id="canvas"></canvas>
 </div>
 <script>
 var xmlDoc;
+var progress = document.getElementById('animationProgress');
 var xhttp = new XMLHttpRequest();
 xhttp.open("GET","graphs_list.xml", true);
 xhttp.send();
@@ -97,7 +102,7 @@ xhttp.onloadend = function() {
         var tags = document.getElementsByClassName("buttonGroup");
         for(i=0;i<tags.length;i++)
         {
-          tags[i].addEventListener("click", function(){ graph.config.data.datasets.splice(0, graph.config.data.datasets.length); graph.dataSet(this.id,parser,colorNames); window.myLine.update();}, false);
+          tags[i].addEventListener("click", function(){graph.config.data.datasets.splice(0, graph.config.data.datasets.length); graph.dataSet(this.id,parser,colorNames); window.myLine.update();}, false);
           tags[i].addEventListener("mouseover", function(){document.getElementById("description").innerHTML = graph.getDescription(this.id);}, false);
           tags[i].addEventListener("mouseout", function(){document.getElementById("description").innerHTML = graph.clear();}, false);
         }
