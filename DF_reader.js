@@ -129,7 +129,6 @@ Parser.prototype.parse_atOffset=function(type,name){
   var num=0;
     for(var i=0;i<this.msgType.length;i++)
     {
-        if(this.msgType[i]==type && num<125) {
           num+=1;
             this.offset = this.offsetArray[i];
             var temp=this.FORMAT_TO_STRUCT(this.FMT[this.msgType[i]]);
@@ -137,7 +136,6 @@ Parser.prototype.parse_atOffset=function(type,name){
             else{
             parsed.push(temp[name]);
           }
-        }
     }
     return parsed;
 }
