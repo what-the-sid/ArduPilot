@@ -104,7 +104,7 @@ graphSelector.prototype.xmlReader = function () {
     count=0;}
   }
 }
-graphSelector.prototype.graphConfig=function(Label,Data,colorNames,time,name)
+graphSelector.prototype.graphConfig=function(Label,Data,colorNames,time,name,date)
 {
   var colorName = colorNames[this.config.data.datasets.length % colorNames.length];
   var newColor = window.chartColors[colorName];
@@ -117,7 +117,7 @@ graphSelector.prototype.graphConfig=function(Label,Data,colorNames,time,name)
   };
   this.config.data.labels=time;
   this.config.data.datasets.push(newDataset);
-  this.config.options.title.text=name;
+  this.config.options.title.text=name + "  ( "+ date+ " )";
 }
 
 graphSelector.prototype.dataSet=function(getId,parser,color)
@@ -143,8 +143,9 @@ graphSelector.prototype.dataSet=function(getId,parser,color)
             else{
               this.data=parser.parse_atOffset(element[j],element2[k]);
               if(this.data!=null){
+                this.date=parser.time;
               element3=element[j] + "." + element2[k] + "  ";
-              this.graphConfig(element3,this.data,color,this.label,id);
+              this.graphConfig(element3,this.data,color,this.label,id,this.date);
               }
             }
             }
