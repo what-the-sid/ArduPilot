@@ -1,5 +1,7 @@
 
 function Parser(){
+  this.time;
+  this.timebase;
   this.buffer;
   this.data;
   this.FMT=[];
@@ -111,6 +113,25 @@ Parser.prototype.FORMAT_TO_STRUCT = function(obj)
     return dict;
 }
 
+Parser.prototype.gpstimetoTime=function(week,msec)
+{
+  epoch = 86400*(10*365 + (1980-1969)/4 + 1 + 6 - 2);
+  return epoch + 86400*7*week + msec*0.001 - 15;
+
+}
+
+Parser.prototype.setTimeBase=function(base)
+{
+  this.timebase=base;
+}
+
+Parser.prototype.findTimeBase=function(gps)
+{
+  var temp= this.gpstimetoTime(parseInt(gps['GWk']),parseInt(gps['GMS']));
+  this.setTimeBase(parseInt(temp-gps['TimeUS']*0.000001));
+
+}
+
 Parser.prototype.getMsgType=function(element){
   for(i=0;i<this.FMT.length;i++)
   {
@@ -132,7 +153,7 @@ Parser.prototype.parse_atOffset=function(type,name){
           num+=1;
             this.offset = this.offsetArray[i];
             var temp=this.FORMAT_TO_STRUCT(this.FMT[this.msgType[i]]);
-            if(name=="TimeUS"){parsed.push(time_stamp(temp[name]));}
+            if(name=="TimeUS"){parsed.push(this.time_stamp(temp[name]));}
             else{
             parsed.push(temp[name]);
           }
@@ -140,12 +161,21 @@ Parser.prototype.parse_atOffset=function(type,name){
     return parsed;
 }
 
-function time_stamp(TimeUs){
+Parser.prototype.time_stamp=function (TimeUs){
+    TimeUs= this.timebase+TimeUs*0.000001;
     var date = new Date(TimeUs*1000);
+    var day=date.getDate();
+    var month=date.getMonth();
+    var year=date.getFullYear();
     var hours = date.getHours();
     var minutes = "0" + date.getMinutes();
     var seconds = "0" + date.getSeconds();
     var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+    var date=date.toString();
+    var time=date.split(" ");
+    if(time[0]!=="Invalid"){
+      this.time=time[0] + " "+time[1] + " "+time[2] + " "+time[3];
+    }
     return formattedTime;
 }
 
@@ -155,7 +185,7 @@ function assign_column(obj){
 }
 Parser.prototype.DF_reader=function()
 {
-    while(this.offset<(this.buffer.byteLength-64)) {
+    while(this.offset<(this.buffer.byteLength-20)) {
         this.offset += 2;
         var attribute = this.data.getUint8(this.offset);
         if(this.FMT[attribute]!=null) {
@@ -163,7 +193,9 @@ Parser.prototype.DF_reader=function()
                 this.offsetArray.push(this.offset);
                 this.msgType.push(attribute);
                 var value = this.FORMAT_TO_STRUCT(this.FMT[attribute]);
-                //console.log(value);
+                if(this.FMT[attribute].Name=='GPS'){
+                  this.findTimeBase(value);
+                }
                 if (attribute == '128') {
                     this.FMT[value['Type']] = {
                         'Type': value['Type'],
