@@ -1,5 +1,5 @@
 <html>
-<head><br><br></head>
+<head><br><h1>ARDUPILOT LOG VIEWER</h1><br></head>
 <style>
 body {margin:0;}
   #byte_content {
@@ -9,6 +9,7 @@ body {margin:0;}
     overflow-x: hidden;
   }
   #canvas{
+    align:left;
       -moz-user-select: none;
       -webkit-user-select: none;
       -ms-user-select: none;
@@ -40,23 +41,25 @@ body {margin:0;}
 </style>
 <body>
 <input type="file" id="files" name="file" />
-<script type="text/javascript" src="xmlGrapher.js"></script>
+<script type="text/javascript" src="Xmlreader.js"></script>
 <script type="text/javascript" src="DF_reader.js"></script>
 <script type="text/javascript" src="chart.js"></script>
 <script type="text/javascript" src="util.js"></script>
-<script src="moment.js"></script>
-<script src="hammer.js"></script>
-<script src="chartjs-plugin-zoom.js"></script>
 <span class="readBytesButtons">
   <button>Parse Log</button>
 </span>
 <p id="load"></p>
-<div id="buttons"></div>
-<p id="description"></p>
-<progress id="animationProgress" max="1" value="0" style="width: 100%"></progress>
-<div class="main">
-      <canvas id="canvas"></canvas>
+<div>
+<select id="buttons">
+
+</select>
 </div>
+<!-- <p id="description"></p> -->
+<progress id="animationProgress" max="1" value="0" style="width: 100%"></progress><br><br>
+<div class="main" style="width:880px;float:left;">
+      <canvas id="canvas" style="width:75%;height:60%;"></canvas>
+</div>
+<div id="tab" style="width:230px;float:right;height:380px;overflow:auto;"></div>
 <script>
 var xmlDoc;
 var progress = document.getElementById('animationProgress');
@@ -82,35 +85,71 @@ xhttp.onloadend = function() {
     reader.onloadend = function(evt) {
 
       if (evt.target.readyState == FileReader.DONE) {
-        var txt="";
+        var txt="<option value='None'></option>";
+        var txt2="<ul>";
         var graph=new graphSelector;
         window.myLine = new Chart(ctx, graph.config);
-        var parser=new Parser;
+         var parser=new Parser;
         var colorNames = Object.keys(window.chartColors);
         graph.xmlDoc=xmlDoc;
         parser.buffer=evt.target.result;
         parser.data=new DataView(parser.buffer);
         parser.DF_reader();
+        //document.getElementById("description").innerHTML=parser.show;
         document.getElementById("load").innerHTML="";
         graph.type=parser.FMT;
         graph.xmlReader();
+        graph.customLogger();
         for(i=0;i<graph.button.length;i++)
         {
-          txt+="<button id='"+graph.button[i]+"' class='buttonGroup'"+">"+graph.button[i]+"</button>";
+          txt+="<option value='"+graph.button[i]+"' class='buttonGroup'"+">"+graph.button[i]+"</option>";
         }
-        document.getElementById("buttons").innerHTML=txt;
-        var tags = document.getElementsByClassName("buttonGroup");
-        for(i=0;i<tags.length;i++)
+        for(i=0;i<graph.list.length;i++)
         {
-          tags[i].addEventListener("click", function(){graph.config.data.datasets.splice(0, graph.config.data.datasets.length); graph.dataSet(this.id,parser,colorNames); window.myLine.update();}, false);
-          tags[i].addEventListener("mouseover", function(){document.getElementById("description").innerHTML = graph.getDescription(this.id);}, false);
-          tags[i].addEventListener("mouseout", function(){document.getElementById("description").innerHTML = graph.clear();}, false);
-        }
+  var splitted=graph.list[i].columns.split(' ');
+  txt2+="<li>"+graph.list[i].name+"<ul>";
+  for(j=0;j<splitted.length;j++)
+  {
+    if(splitted[j]!="")
+    txt2+="<li><input class='inputGroup' type='checkBox' id='"+graph.list[i].name+"."+splitted[j]+"' >"+splitted[j]+"</input></li>";
+  }
+  txt2+="</ul>";
+}
+
+
+txt2+="</ul>";
+
+
+        document.getElementById("tab").innerHTML=txt2;
+        document.getElementById("buttons").innerHTML=txt;
+        var tags = document.getElementById("buttons");
+          tags.addEventListener('change', function(){graph.config.data.datasets.splice(0, graph.config.data.datasets.length); graph.dataSet(this.value,parser,colorNames); window.myLine.update();}, false);
+        var tags2 = document.getElementsByClassName("inputGroup");
+        for(i=0;i<tags2.length;i++){
+            tags2[i].addEventListener('change', function(){
+              if(this.checked) {
+                var split=this.id.split('.');
+                var data=parser.parse_atOffset(split[0],split[1]);
+                var time=parser.parse_atOffset(split[0],'TimeUS');
+                graph.graphConfig(this.id,data,colorNames,time,this.id,parser.time);
+                window.myLine.update();
+              }
+              if(!this.checked) {
+                let index = graph.config.data.datasets.findIndex( (el) => el.label === this.id );
+                console.log(index);
+                if(index!=-1){
+                graph.config.data.datasets.splice(index, 1);
+                window.myLine.update();
+              }
+              }
+            }, false);
+          }
       };
     };
-
     var blob = file.slice(start, stop);
+    if(document.getElementById('files').value.split('.').pop()=='BIN'||document.getElementById('files').value.split('.').pop()=='bin')
     reader.readAsArrayBuffer(blob);
+    else reader.readAsText(blob);
 }
 
   document.querySelector('.readBytesButtons').addEventListener('click', function(evt) {
