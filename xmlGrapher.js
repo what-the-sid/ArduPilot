@@ -1,6 +1,7 @@
 var graphSelector=function(){
   this.type;
   this.button=[];
+  this.list=[];
   this.xmlDoc;
   this.dataSet;
   this.config={
@@ -16,7 +17,7 @@ var graphSelector=function(){
               text:''
           },
           animation: {
-        duration: 2000,
+        duration: 1000,
         onProgress: function(animation) {
             progress.value = animation.currentStep / animation.numSteps;
         },
@@ -42,22 +43,16 @@ var graphSelector=function(){
                       labelString: 'time'
                   }
               }],
-              yAxes: [{
-                  display: true,
-                  scaleLabel: {
-                      display: true,
-                      labelString: 'Data'
-                  }
-              }]
-          },
-          pan: {
-            enabled: true,
-            mode: 'xy',
-          },
-          zoom: {
-            enabled: true,
-            mode: 'xy',
-          },
+              yAxes: [
+                // {
+                //   display: true,
+                //   scaleLabel: {
+                //       display: true,
+                //       labelString: 'Data'
+                //   }
+              // }
+            ]
+          }
       }
   };
 }
@@ -76,10 +71,6 @@ graphSelector.prototype.getDescription=function(id){
       return y[i].childNodes[0].nodeValue;
     }
   }
-}
-graphSelector.prototype.clear=function(){
-  var txt="";
-  return txt;
 }
 graphSelector.prototype.xmlReader = function () {
   var element,count=0;
@@ -104,52 +95,102 @@ graphSelector.prototype.xmlReader = function () {
     count=0;}
   }
 }
+
+graphSelector.prototype.customLogger = function () {
+    var element,count=0;
+    var temp=this.xmlDoc.getElementsByTagName("type");
+    var name=this.xmlDoc.getElementsByTagName("graph");
+    var columns=this.xmlDoc.getElementsByTagName("expression");
+    for(i=0;i<temp.length;i++)
+    {
+      element=split(temp[i].childNodes[0].nodeValue);
+      for(j=0;j<element.length;j++)
+      {
+        for(k=0;k<this.type.length;k++){
+          if(this.type[k]!=null){
+          if(element[j]==this.type[k].Name){
+            var column=columns[i].childNodes[0].nodeValue.split(" ");
+            var selected="";
+            for(l=0;l<column.length;l++)
+            {
+              if(this.type[k].Columns.search(column[l])>=1){
+                if(l<column.length-1)
+              selected+=column[l]+" ";
+              else {
+                selected+=column[l];
+              }
+            }
+            }
+            this.list.push({name:element[j],columns:selected});// if(this.type[k].Columns.search(element[j])>=0)
+        }
+      }
+      }
+      }
+    }
+    this.list=this.list.filter((thing, index, self) => self.findIndex(t => t.name === thing.name ) === index)
+  }
+
 graphSelector.prototype.graphConfig=function(Label,Data,colorNames,time,name,date)
 {
+  var positions=["left","right"];
   var colorName = colorNames[this.config.data.datasets.length % colorNames.length];
   var newColor = window.chartColors[colorName];
+  if(Data.length>5){
   var newDataset = {
-      label:Label,
-      backgroundColor: newColor,
-      borderColor: newColor,
-      data: Data,
-      fill: false
+      "label":Label,
+      "backgroundColor": newColor,
+      "borderColor": newColor,
+      "data": Data,
+      "fill": false
   };
+  //this.config.options.scales.yAxes.push({"id":"Yid",type: 'linear',position:"right"});
   this.config.data.labels=time;
   this.config.data.datasets.push(newDataset);
   this.config.options.title.text=name + "  ( "+ date+ " )";
+  //console.log(this.config.options);
 }
+}
+
+
 
 graphSelector.prototype.dataSet=function(getId,parser,color)
 {
-  var element,element2,TimeUs,element3;
+  var element,element2,TimeUs,element3,data=[];
   var id=getId;
   var name=this.xmlDoc.getElementsByTagName("graph");
   var temp=this.xmlDoc.getElementsByTagName("type");
   var columns=this.xmlDoc.getElementsByTagName("expression");
-  for(i=0;i<temp.length;i++)
+  for(var i=0;i<temp.length;i++)
   {
-    element=split(temp[i].childNodes[0].nodeValue);
-    element2=split(columns[i].childNodes[0].nodeValue);
     if(name[i].getAttributeNode("name").nodeValue==id){
-        for(j=0;j<element.length;j++)
+          element=split(temp[i].childNodes[0].nodeValue);
+          element2=split(columns[i].childNodes[0].nodeValue);
+          var column="";
+        for(var j=0;j<element.length;j++)
         {
-          for(k=0;k<element2.length;k++)
+          for(var k=0;k<element2.length;k++)
           {
-            if(element2[k] == 'TimeUS')
-            {
-              this.label=parser.parse_atOffset(element[j],element2[k]);
+            if(k<=element2.length-2)
+            column+=element2[k]+",";
+            else column+=element2[k];
             }
-            else{
-              this.data=parser.parse_atOffset(element[j],element2[k]);
-              if(this.data!=null){
-                this.date=parser.time;
-              element3=element[j] + "." + element2[k] + "  ";
-              this.graphConfig(element3,this.data,color,this.label,id,this.date);
-              }
-            }
-            }
-        }
+            data.push({name:element[j],Column:column});
+            column="";
+          }
     }
+    }
+    for(var i=0;i<data.length;i++){
+      var splitted=data[i].Column.split(",");
+      for(var j=0;j<splitted.length;j++){
+        if(splitted[j]=='TimeUS')
+        this.label=parser.parse_atOffset(data[i].name,splitted[j]);
+        else {
+          this.data=parser.parse_atOffset(data[i].name,splitted[j]);
+        }
+        if(this.data!=null){
+         element3=data[i].name + "." + splitted[j] + "  ";
+        this.graphConfig(element3,this.data,color,this.label,id,parser.time)
+      }
+      }
     }
   }
