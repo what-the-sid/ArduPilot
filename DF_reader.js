@@ -150,19 +150,25 @@ Parser.prototype.parse_atOffset=function(type,name){
   var num=0;
     for(var i=0;i<this.msgType.length;i++)
     {
-          num+=1;
+      if(type==this.msgType[i]){
             this.offset = this.offsetArray[i];
             var temp=this.FORMAT_TO_STRUCT(this.FMT[this.msgType[i]]);
-            if(name=="TimeUS"){parsed.push(this.time_stamp(temp[name]));}
+            if(name=="TimeUS"){
+              parsed.push(this.time_stamp(temp[name]));
+            }
             else{
             parsed.push(temp[name]);
           }
+        }
     }
     return parsed;
 }
 
 Parser.prototype.time_stamp=function (TimeUs){
-    TimeUs= this.timebase+TimeUs*0.000001;
+  var temp=0;
+  temp=this.timebase+TimeUs*0.000001;
+  if(temp>0)
+    TimeUs= temp;
     var date = new Date(TimeUs*1000);
     var day=date.getDate();
     var month=date.getMonth();
