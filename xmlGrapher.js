@@ -44,13 +44,15 @@ var graphSelector=function(){
                   }
               }],
               yAxes: [
-                // {
-                //   display: true,
-                //   scaleLabel: {
-                //       display: true,
-                //       labelString: 'Data'
-                //   }
-              // }
+                {
+                  display: true,
+                  scaleLabel: {
+                      display: true,
+                      labelString: 'Data'
+                  }
+              },{
+              position:"right"
+            }
             ]
           }
       }
@@ -138,12 +140,13 @@ graphSelector.prototype.graphConfig=function(Label,Data,colorNames,time,name,dat
   if(Data.length>5){
   var newDataset = {
       "label":Label,
+      // yAxesId:Label,
       "backgroundColor": newColor,
       "borderColor": newColor,
       "data": Data,
       "fill": false
   };
-  //this.config.options.scales.yAxes.push({"id":"Yid",type: 'linear',position:"right"});
+  //this.config.options.scales.yAxes.push({"id":Label,type: 'linear',position:"right"});
   this.config.data.labels=time;
   this.config.data.datasets.push(newDataset);
   this.config.options.title.text=name + "  ( "+ date+ " )";
