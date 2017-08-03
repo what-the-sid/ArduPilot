@@ -1,4 +1,5 @@
 var graphSelector=function(){
+  this.option=0;
   this.type;
   this.button=[];
   this.list=[];
@@ -45,14 +46,23 @@ var graphSelector=function(){
               }],
               yAxes: [
                 {
+                  "id": "1",
                   display: true,
+                  position:"left",
                   scaleLabel: {
                       display: true,
                       labelString: 'Data'
-                  }
-              },{
-              position:"right"
-            }
+                  },
+            },
+                {
+                  "id": "2",
+                  display: true,
+                  position:"right",
+                  scaleLabel: {
+                      display: true,
+                      labelString: 'Data2'
+                  },
+                },
             ]
           }
       }
@@ -132,25 +142,34 @@ graphSelector.prototype.customLogger = function () {
     this.list=this.list.filter((thing, index, self) => self.findIndex(t => t.name === thing.name ) === index)
   }
 
+
+
 graphSelector.prototype.graphConfig=function(Label,Data,colorNames,time,name,date)
 {
-  var positions=["left","right"];
+  var id=["1","2"];
+  var positioned;
+  if(this.option==0){
+    positioned=id[0];
+    this.option=1;
+  }
+  else if(this.option==1){
+    positioned=id[1];
+    this.option=0;
+  }
   var colorName = colorNames[this.config.data.datasets.length % colorNames.length];
   var newColor = window.chartColors[colorName];
   if(Data.length>5){
   var newDataset = {
       "label":Label,
-      // yAxesId:Label,
+      yAxisID:positioned,
       "backgroundColor": newColor,
       "borderColor": newColor,
       "data": Data,
       "fill": false
   };
-  //this.config.options.scales.yAxes.push({"id":Label,type: 'linear',position:"right"});
   this.config.data.labels=time;
   this.config.data.datasets.push(newDataset);
   this.config.options.title.text=name + "  ( "+ date+ " )";
-  //console.log(this.config.options);
 }
 }
 
