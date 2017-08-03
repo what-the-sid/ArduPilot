@@ -41,7 +41,7 @@ body {margin:0;}
 </style>
 <body>
 <input type="file" id="files" name="file" />
-<script type="text/javascript" src="xmlGrapher.js"></script>
+<script type="text/javascript" src="Xmlreader.js"></script>
 <script type="text/javascript" src="DF_reader.js"></script>
 <script type="text/javascript" src="chart.js"></script>
 <script type="text/javascript" src="util.js"></script>
@@ -59,7 +59,7 @@ body {margin:0;}
 <div class="main" style="width:880px;float:left;">
       <canvas id="canvas" style="width:75%;height:60%;"></canvas>
 </div>
-<div id="tab" style="width:230px;float:right;height:380px;overflow:auto;"></div>
+<div id="tab" style="width:230px;float:right;height:380px;overflow:auto;border:1px solid black;"></div>
 <script>
 var xmlDoc;
 var progress = document.getElementById('animationProgress');
@@ -136,7 +136,6 @@ txt2+="</ul>";
               }
               if(!this.checked) {
                 let index = graph.config.data.datasets.findIndex( (el) => el.label === this.id );
-                console.log(index);
                 if(index!=-1){
                 graph.config.data.datasets.splice(index, 1);
                 window.myLine.update();
