@@ -35,7 +35,7 @@ body {margin:0;}
 .main {
   padding: 16px;
   margin-bottom: 70px;
-  height: 500px; /* Used in this example to enable scrolling */
+  height: 300px; /* Used in this example to enable scrolling */
 }
 
 </style>
@@ -57,9 +57,10 @@ body {margin:0;}
 <!-- <p id="description"></p> -->
 <progress id="animationProgress" max="1" value="0" style="width: 100%"></progress><br><br>
 <div class="main" style="width:880px;float:left;">
-      <canvas id="canvas" style="width:75%;height:60%;"></canvas>
+      <canvas id="canvas" style="width:75%;height:100%;"></canvas>
 </div>
 <div id="tab" style="width:230px;float:right;height:380px;overflow:auto;border:1px solid black;"></div>
+<p style="float:left;">'*' indicates the graphing is plotted against right scale y axis.</p>
 <script>
 var xmlDoc;
 var progress = document.getElementById('animationProgress');
@@ -69,7 +70,7 @@ xhttp.send();
 xhttp.onloadend = function() {
       xmlDoc=this.responseXML;  //xmlReader(this.responseXML);
 };
-  function readBlob(opt_startByte, opt_stopByte) {
+  function readBlob() {
     document.getElementById("load").innerHTML = "Parsing....Please wait";
     var ctx = document.getElementById("canvas").getContext("2d");
     var files = document.getElementById('files').files;
@@ -153,9 +154,7 @@ txt2+="</ul>";
 
   document.querySelector('.readBytesButtons').addEventListener('click', function(evt) {
     if (evt.target.tagName.toLowerCase() == 'button') {
-      var startByte = evt.target.getAttribute('data-startbyte');
-      var endByte = evt.target.getAttribute('data-endbyte');
-      readBlob(startByte, endByte);
+      readBlob();
 
     }
   }, false);
