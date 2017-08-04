@@ -46,7 +46,7 @@ var graphSelector=function(){
               }],
               yAxes: [
                 {
-                  "id": "1",
+                  "id": "left",
                   display: true,
                   position:"left",
                   scaleLabel: {
@@ -55,7 +55,7 @@ var graphSelector=function(){
                   },
             },
                 {
-                  "id": "2",
+                  "id": "right",
                   display: true,
                   position:"right",
                   scaleLabel: {
@@ -64,6 +64,7 @@ var graphSelector=function(){
                   },
                 },
             ]
+
           }
       }
   };
@@ -146,7 +147,7 @@ graphSelector.prototype.customLogger = function () {
 
 graphSelector.prototype.graphConfig=function(Label,Data,colorNames,time,name,date)
 {
-  var id=["1","2"];
+  var id=["left","right"];
   var positioned;
   if(this.option==0){
     positioned=id[0];
@@ -154,6 +155,7 @@ graphSelector.prototype.graphConfig=function(Label,Data,colorNames,time,name,dat
   }
   else if(this.option==1){
     positioned=id[1];
+    Label+="*";
     this.option=0;
   }
   var colorName = colorNames[this.config.data.datasets.length % colorNames.length];
