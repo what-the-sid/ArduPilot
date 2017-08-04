@@ -136,7 +136,7 @@ txt2+="</ul>";
                 window.myLine.update();
               }
               if(!this.checked) {
-                let index = graph.config.data.datasets.findIndex( (el) => el.label === this.id );
+                let index = graph.config.data.datasets.findIndex( (el) => el.label.search(this.id)>=0 );
                 if(index!=-1){
                 graph.config.data.datasets.splice(index, 1);
                 window.myLine.update();
