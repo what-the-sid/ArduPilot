@@ -211,7 +211,7 @@ graphSelector.prototype.dataSet=function(getId,parser,color)
         else {
           this.data=parser.parse_atOffset(data[i].name,splitted[j]);
         }
-        if(this.data!=null){
+        if(this.data!=null && splitted[j]!='TimeUS'){
          element3=data[i].name + "." + splitted[j] + "  ";
         this.graphConfig(element3,this.data,color,this.label,id,parser.time)
       }
