@@ -153,10 +153,10 @@ Parser.prototype.parse_atOffset=function(type,name){
       if(type==this.msgType[i]){
             this.offset = this.offsetArray[i];
             var temp=this.FORMAT_TO_STRUCT(this.FMT[this.msgType[i]]);
-            if(name=="TimeUS"){
+            if(name=="TimeUS" && temp[name]!=null){
               parsed.push(this.time_stamp(temp[name]));
             }
-            else{
+            else if (temp[name]!=null){
             parsed.push(temp[name]);
           }
         }
