@@ -60,7 +60,7 @@ body {margin:0;}
       <canvas id="canvas" style="width:75%;height:100%;"></canvas>
 </div>
 <div id="tab" style="width:230px;float:right;height:380px;overflow:auto;border:1px solid black;"></div>
-<p style="float:left;">'*' indicates the graphing is plotted against right scale y axis.</p>
+<p style="float:left;">_____________________________'*' indicates the graphing is plotted against right scale y axis._____________________________</p>
 <script>
 var xmlDoc;
 var progress = document.getElementById('animationProgress');
@@ -87,7 +87,7 @@ xhttp.onloadend = function() {
 
       if (evt.target.readyState == FileReader.DONE) {
         var txt="<option value='None'></option>";
-        var txt2="<ul>";
+        var txt2="<input type='checkBox' id='selectAll'>select All</input>"+"<ul>";
         var graph=new graphSelector;
         window.myLine = new Chart(ctx, graph.config);
          var parser=new Parser;
@@ -139,11 +139,38 @@ txt2+="</ul>";
                 let index = graph.config.data.datasets.findIndex( (el) => el.label.search(this.id)>=0 );
                 if(index!=-1){
                 graph.config.data.datasets.splice(index, 1);
+                graph.config.options.title.text="Select a graph.";
                 window.myLine.update();
               }
               }
             }, false);
           }
+          var tags3= document.getElementById("selectAll");
+          tags3.addEventListener('change',function(){
+            if(this.checked){
+              for(var i=0;i<tags2.length;i++)
+              {
+                tags2[i].checked=true;
+                var split= tags2[i].id.split('.');
+                var data=parser.parse_atOffset(split[0],split[1]);
+                var time=parser.parse_atOffset(split[0],'TimeUS');
+                graph.graphConfig(tags2[i].id,data,colorNames,time,tags2[i].id,parser.time);
+                window.myLine.update();
+              }
+            }
+            if(!this.checked){
+              for(i=0;i<tags2.length;i++)
+              {
+                tags2[i].checked=false;
+                let index = graph.config.data.datasets.findIndex( (el) => el.label.search(tags2[i].id)>=0 );
+                if(index!=-1){
+                graph.config.data.datasets.splice(index, 1);
+                graph.config.options.title.text="Select a graph.";
+                window.myLine.update();
+              }
+            }
+          }
+          }, false);
       };
     };
     var blob = file.slice(start, stop);
