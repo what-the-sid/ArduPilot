@@ -109,39 +109,27 @@ graphSelector.prototype.xmlReader = function () {
   }
 }
 
-graphSelector.prototype.customLogger = function () {
-    var element,count=0;
-    var temp=this.xmlDoc.getElementsByTagName("type");
-    var name=this.xmlDoc.getElementsByTagName("graph");
-    var columns=this.xmlDoc.getElementsByTagName("expression");
-    for(i=0;i<temp.length;i++)
+graphSelector.prototype.customLogger=function () {
+
+  for(var i=0; i<this.type.length;i++)
+  {
+    if(this.type[i]!=null)
     {
-      element=split(temp[i].childNodes[0].nodeValue);
-      for(j=0;j<element.length;j++)
+      var selected="";
+      var splitted=this.type[i].Columns.split(",");
+      for(var j=0;j<splitted.length;j++)
       {
-        for(k=0;k<this.type.length;k++){
-          if(this.type[k]!=null){
-          if(element[j]==this.type[k].Name){
-            var column=columns[i].childNodes[0].nodeValue.split(" ");
-            var selected="";
-            for(l=0;l<column.length;l++)
-            {
-              if(this.type[k].Columns.search(column[l])>=1){
-                if(l<column.length-1)
-              selected+=column[l]+" ";
-              else {
-                selected+=column[l];
-              }
-            }
-            }
-            this.list.push({name:element[j],columns:selected});// if(this.type[k].Columns.search(element[j])>=0)
+        if(j<splitted.length-1)
+        selected+=splitted[j]+" ";
+        else {
+          selected+=splitted[j];
         }
       }
-      }
-      }
+      this.list.push({name:this.type[i].Name,columns:selected});// if(this.type[k].Columns.search(element[j])>=0)
     }
-    this.list=this.list.filter((thing, index, self) => self.findIndex(t => t.name === thing.name ) === index)
   }
+  this.list=this.list.filter((thing, index, self) => self.findIndex(t => t.name === thing.name ) === index)
+}
 
 
 
